@@ -39,7 +39,7 @@ ApplicationWindow {
                     color: window.lightMode ? window.dark : window.light
                     font.pixelSize: 120
                     fontSizeMode: Text.Fit
-                    text: qsTr("Hello World")
+                    text: qsTr("Fuck You")
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.margins: 16
