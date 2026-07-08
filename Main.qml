@@ -1,90 +1,570 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Controls.Basic
 
 
 ApplicationWindow {
-    id: window
-    width: 640
-    height: 480
-    minimumWidth: 200
-    minimumHeight: 250
+
+    id: root
+
+    width: 1440
+    height: 820
+
     visible: true
-    title: qsTr("Hello World")
-    property bool lightMode: Application.styleHints.colorScheme === Qt.Light
-    property color reallyDark: "#1f1f1f"
-    property color dark: "#262626"
-    property color reallyLight: "#e7e7e7"
-    property color light: "#e0e0e0"
 
-    GridLayout {
-        id: grid
-        columns: width < 400 ? 1 : 2
-        rowSpacing: 0
-        columnSpacing: 0
-        anchors.fill: parent
+    title: "VoltFlow"
 
-        Rectangle {
-            id: rectangle1
-            color: window.lightMode ? window.reallyLight : window.reallyDark
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+    color:"#080d13"
 
-            ColumnLayout {
-                anchors.fill: parent
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
 
-                Label {
-                    id: text1
-                    color: window.lightMode ? window.dark : window.light
-                    font.pixelSize: 120
-                    fontSizeMode: Text.Fit
-                    text: qsTr("Fuck You")
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.margins: 16
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+
+    property int capacitor:82
+
+
+
+    RowLayout{
+
+
+        anchors.fill:parent
+
+        spacing:0
+
+
+
+        //==========================
+        // 左侧菜单栏
+        //==========================
+
+        Rectangle{
+
+
+            Layout.preferredWidth:240
+
+            Layout.fillHeight:true
+
+
+            color:"#0d141c"
+
+
+
+            Column{
+
+
+                anchors.fill:parent
+
+                anchors.margins:25
+
+
+                spacing:18
+
+
+
+                Text{
+
+                    text:"⚡ VoltFlow"
+
+                    color:"#e5f0f7"
+
+                    font.pixelSize:28
+
+                    font.bold:true
+
                 }
+
+
+
+                Text{
+
+                    text:"SELF CONTROL SYSTEM"
+
+                    color:"#60788b"
+
+                    font.pixelSize:11
+
+                }
+
+
+
+                Rectangle{
+
+                    width:190
+
+                    height:1
+
+                    color:"#253441"
+
+                }
+
+
+
+                MenuButton{
+
+                    text:"⌂  首页"
+
+                    active:true
+
+                }
+
+
+
+                MenuButton{
+
+                    text:"＋ 任务添加"
+
+                }
+
+
+
+                MenuButton{
+
+                    text:"◷ 学习记录"
+
+                }
+
+
+
+                MenuButton{
+
+                    text:"⚙ 设置"
+
+                }
+
+
+
+                MenuButton{
+
+                    text:"◐ 主题"
+
+                }
+
+
+
+                Item{
+
+                    height:260
+
+                }
+
+
+
+                Text{
+
+                    text:"● System Online"
+
+                    color:"#43e06f"
+
+                }
+
+
             }
+
         }
 
-        Rectangle {
-            id: rectangle2
-            color: window.lightMode ? window.light : window.dark
-            Layout.fillHeight: true
-            Layout.fillWidth: true
 
-            ColumnLayout {
-                anchors.fill: parent
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
 
-                Button {
-                    id: button1
-                    text: window.lightMode ? qsTr("\u263D  Dark mode")
-                                           : qsTr("\u263C  Light mode")
-                    Layout.bottomMargin: 16
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
 
-                    contentItem: Text {
-                        text: button1.text
-                        color: window.lightMode ? window.light : window.dark
-                        font: button1.font
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
 
-                    background: Rectangle {
-                        implicitWidth: 120
-                        implicitHeight: 36
-                        radius: 8
-                        color: window.lightMode ? window.dark : window.light
-                    }
 
-                    onClicked: window.lightMode = !window.lightMode
+        //==========================
+        // 中间电容
+        //==========================
+
+
+        Rectangle{
+
+
+            Layout.fillWidth:true
+
+            Layout.fillHeight:true
+
+
+            color:"#0a1017"
+
+
+
+
+            Column{
+
+
+                anchors.centerIn:parent
+
+
+                spacing:25
+
+
+
+
+                Text{
+
+                    text:"WEEKLY CAPACITOR"
+
+                    color:"#8fa8bb"
+
+                    font.pixelSize:22
+
                 }
+
+
+
+                //竖向电池
+
+                Rectangle{
+
+
+                    width:160
+
+                    height:450
+
+
+                    radius:30
+
+
+                    color:"#111b25"
+
+
+                    border.width:2
+
+
+                    border.color:
+
+                    capacitor>=100?
+                    "#39ff88":
+                    "#34495a"
+
+
+
+
+
+                    Rectangle{
+
+
+                        anchors.bottom:parent.bottom
+
+
+                        anchors.horizontalCenter:parent.horizontalCenter
+
+
+
+                        width:120
+
+
+                        height:
+
+                        400*capacitor/100
+
+
+
+                        radius:22
+
+
+
+                        color:
+
+                        capacitor<30?
+
+                        "#ff304f":
+
+                        capacitor<70?
+
+                        "#ffc857":
+
+                        "#39d353"
+
+
+
+
+
+                        SequentialAnimation on opacity{
+
+
+                            running:capacitor>=100
+
+                            loops:Animation.Infinite
+
+
+
+                            NumberAnimation{
+
+                                from:1
+
+                                to:0.4
+
+                                duration:600
+
+                            }
+
+
+                            NumberAnimation{
+
+                                from:0.4
+
+                                to:1
+
+                                duration:600
+
+                            }
+
+
+                        }
+
+
+                    }
+
+
+
+
+
+                    Text{
+
+
+                        anchors.centerIn:parent
+
+
+                        text:capacitor+"%"
+
+
+                        color:"white"
+
+
+                        font.pixelSize:40
+
+
+                        font.bold:true
+
+
+                    }
+
+
+                }
+
+
+
+
+
+
+                Row{
+
+
+                    spacing:8
+
+
+
+                    Repeater{
+
+
+                        model:7
+
+
+
+                        Rectangle{
+
+
+                            width:42
+
+                            height:12
+
+
+                            radius:6
+
+
+                            color:
+
+
+                            [
+                            "#ff4050",
+                            "#ff7b35",
+                            "#ffc857",
+                            "#ffd93d",
+                            "#39d353",
+                            "#39d353",
+                            "#39d353"
+
+                            ][index]
+
+                        }
+
+                    }
+
+                }
+
+
+
+
+                Text{
+
+                    text:"MON  TUE  WED  THU  FRI  SAT  SUN"
+
+                    color:"#637b8c"
+
+                    font.pixelSize:12
+
+                }
+
+
+
             }
+
+
         }
+
+
+
+
+
+
+
+        //==========================
+        // 右侧分析
+        //==========================
+
+
+        Rectangle{
+
+
+            Layout.preferredWidth:420
+
+
+            Layout.fillHeight:true
+
+
+            color:"#101923"
+
+
+
+
+            Column{
+
+
+                anchors.fill:parent
+
+
+                anchors.margins:30
+
+
+                spacing:22
+
+
+
+
+                Text{
+
+
+                    text:"TODAY ANALYSIS"
+
+                    color:"#e5edf3"
+
+
+                    font.pixelSize:26
+
+
+                    font.bold:true
+
+                }
+
+
+
+
+                InfoCard{
+
+
+                    title:"📌 今日任务完成率"
+
+                    value:"78%"
+
+                }
+
+
+
+                InfoCard{
+
+
+                    title:"⚡ 溢出电荷"
+
+                    value:"+420 Wh"
+
+                }
+
+
+
+                InfoCard{
+
+
+                    title:"🎯 Performance Factor"
+
+                    value:"86.4"
+
+                }
+
+
+
+                InfoCard{
+
+
+                    title:"☕ 可兑换休息"
+
+                    value:"3.5 h"
+
+                }
+
+
+
+
+                Item{
+
+                    height:100
+
+                }
+
+
+
+
+                Text{
+
+                    text:"CORE STATUS"
+
+                    color:"#71899a"
+
+                }
+
+
+
+                Text{
+
+
+                    text:
+
+                    capacitor>=100?
+
+                    "⚡ OVERCLOCK ACTIVE ×1.2":
+
+                    "NORMAL CHARGING"
+
+
+
+                    color:
+
+                    capacitor>=100?
+
+                    "#39ff88":
+
+                    "#8fa8bb"
+
+
+
+                    font.pixelSize:18
+
+                }
+
+
+            }
+
+        }
+
+
     }
+
+
+
+
 
 }

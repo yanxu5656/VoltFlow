@@ -21,6 +21,10 @@ qt_add_qml_module(appVoltFlow
     URI VoltFlow
     QML_FILES
         Main.qml
+        InfoCard.qml
+        MenuButton.qml
+        QML_FILES InfoCard.qml
+        QML_FILES MenuButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
