@@ -6,6 +6,10 @@ ApplicationWindow {
     id:window
     width:1600
     height:900
+    maximumWidth: 1600
+    minimumWidth: 1600
+    maximumHeight: 900
+    minimumHeight: 900//当前版本定死1600*900 不支持更改
 
     visible:true
     color:"#B0F2DE"
