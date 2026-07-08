@@ -4,7 +4,9 @@ project(VoltFlow VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick
+    Svg
+)
 
 qt_standard_project_setup(REQUIRES 6.10)
 
@@ -21,10 +23,25 @@ qt_add_qml_module(appVoltFlow
     URI VoltFlow
     QML_FILES
         Main.qml
-        InfoCard.qml
-        MenuButton.qml
-        QML_FILES InfoCard.qml
-        QML_FILES MenuButton.qml
+        TopBar.qml
+        SideBar.qml
+        EnergyCore.qml
+        QML_FILES TaskDetail.qml
+        QML_FILES DetailRow.qml
+        QML_FILES ResourceCard.qml
+        QML_FILES ResourceRow.qml
+        QML_FILES MetricPanel.qml
+        QML_FILES MetricItem.qml
+        QML_FILES RecommendCard.qml
+
+    RESOURCES
+        assets/icons/bolt.svg
+        assets/icons/store.svg
+        assets/icons/shirt.svg
+        assets/icons/house.svg
+        assets/icons/clipboard-plus.svg
+        assets/icons/history.svg
+        assets/icons/chart-column.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -40,6 +57,7 @@ set_target_properties(appVoltFlow PROPERTIES
 
 target_link_libraries(appVoltFlow
     PRIVATE Qt6::Quick
+            Qt6::Svg
 )
 
 install(TARGETS appVoltFlow
