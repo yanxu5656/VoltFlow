@@ -1,4 +1,4 @@
-// 任务与能量核心管理头文件：支持区分普通任务与免提醒推荐任务
+// 任务管理头文件：将截止时间计算收归后端，规避QML时间类型转换陷阱
 #ifndef TASKMANAGER_H
 #define TASKMANAGER_H
 
@@ -35,7 +35,8 @@ public:
     }
     QDateTime currentTime() const { return m_current_time; }
 
-    Q_INVOKABLE void addTask(const QString &name, int priority, const QDateTime &deadline, int reviewType, int reviewInt, int reward, int isRec);
+    // 💡 优化：将QDateTime替换为整型小时数durationHours
+    Q_INVOKABLE void addTask(const QString &name, int priority, int durationHours, int reviewType, int reviewInt, int reward, int isRec);
     Q_INVOKABLE void completeTask(int id);
     Q_INVOKABLE void removeTask(int id, bool isPool = false);
     Q_INVOKABLE void addRecPool(const QString &name);

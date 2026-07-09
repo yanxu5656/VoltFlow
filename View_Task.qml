@@ -1,24 +1,31 @@
-// 任务舱配置后台：实现从推荐池点击载入进行详细编辑、自定参数配置并注入数据库
+// 任务舱配置后台：向 C++ 直接传送纯整型持续时间，规避 JS Date 到 C++ 反射故障
 import QtQuick
 import QtQuick.Controls
 
 Item {
     id: view_task
-    width: 1600; height: 900
+    width: 1600
+    height: 900
 
     Rectangle {
-        anchors.fill: parent; color: "#B0F2DE"
+        anchors.fill: parent
+        color: "#B0F2DE"
 
         Rectangle {
             id: rect_box
-            x: 50; y: 60; width: 600; height: 780
-            color: "#8ED9F6"; border.color: "#1ABC9C"; border.width: 4
+            x: 50
+            y: 60
+            width: 600
+            height: 780
+            color: "#8ED9F6"
+            border.color: "#1ABC9C"
+            border.width: 4
             Text { id: txt_title; x: 20; y: 20; text: "任务与系统推荐配置面板"; color: "#FFFFD6"; font.pixelSize: 24; font.bold: true }
 
-            // 系统推荐池（点击任意项直接将主题载入输入框进行详细编辑）
             Text { x: 20; y: 65; text: "点击下方系统推荐项，可直接载入详细编辑区:"; color: "#FFFFD6"; font.pixelSize: 14 }
             Rectangle {
-                x: 20; y: 90; width: 560; height: 140; color: "#ADCEC8"; border.color: "#1ABC9C"; border.width: 2
+                x: 20;
+                y: 90; width: 560; height: 140; color: "#ADCEC8"; border.color: "#1ABC9C"; border.width: 2
                 ListView {
                     anchors.fill: parent; anchors.margins: 5; model: taskManager.sysRecs; clip: true
                     delegate: Rectangle {
@@ -33,10 +40,10 @@ Item {
                 }
             }
 
-            // 活动任务查看区
             Text { x: 20; y: 245; text: "当前正在执行中的活动任务列表:"; color: "#FFFFD6"; font.pixelSize: 14 }
             Rectangle {
-                x: 20; y: 270; width: 560; height: 180; color: "#ADCEC8"; border.color: "#1ABC9C"; border.width: 2
+                x: 20;
+                y: 270; width: 560; height: 180; color: "#ADCEC8"; border.color: "#1ABC9C"; border.width: 2
                 ListView {
                     anchors.fill: parent; anchors.margins: 5; model: taskManager.userTasks; clip: true
                     delegate: Rectangle {
@@ -47,11 +54,11 @@ Item {
                 }
             }
 
-            // 详细参数编辑区域
             Rectangle { x: 20; y: 465; width: 560; height: 2; color: "#1ABC9C" }
             TextField { id: input_name; x: 20; y: 480; width: 380; height: 40; placeholderText: "输入正在编辑的任务主题具体内容..." }
             ComboBox {
-                id: cb_type; x: 410; y: 480; width: 170; height: 40
+                id: cb_type;
+                x: 410; y: 480; width: 170; height: 40
                 model: ["普通任务", "系统推荐属性"]
                 currentIndex: 0
             }
@@ -59,33 +66,40 @@ Item {
             TextField { id: input_reward; x: 20; y: 535; width: 180; height: 40; placeholderText: "能量加分(如25)"; validator: IntValidator{bottom: 1} }
             TextField { id: input_hours; x: 210; y: 535; width: 180; height: 40; placeholderText: "限时完成(小时)"; validator: IntValidator{bottom: 1} }
             ComboBox {
-                id: cb_priority; x: 400; y: 535; width: 180; height: 40
+                id: cb_priority;
+                x: 400; y: 535; width: 180; height: 40
                 model: ["优先级 1 (低)", "优先级 2", "优先级 3", "优先级 4", "优先级 5 (高)"]
-                currentIndex: 2; visible: cb_type.currentIndex === 0
+                currentIndex: 2;
+                visible: cb_type.currentIndex === 0
             }
 
             ComboBox {
-                id: cb_review; x: 20; y: 590; width: 260; height: 40
+                id: cb_review;
+                x: 20; y: 590; width: 260; height: 40
                 model: ["关闭留存复习提醒", "开启自定分钟循环", "开启艾宾浩斯判定"]
-                currentIndex: 0; visible: cb_type.currentIndex === 0
+                currentIndex: 0;
+                visible: cb_type.currentIndex === 0
             }
             TextField {
-                id: input_rev_val; x: 300; y: 590; width: 280; height: 40; placeholderText: "输入具体循环复习间隔(分钟)"
-                visible: cb_review.currentIndex > 0 && cb_type.currentIndex === 0; validator: IntValidator{bottom: 1}
+                id: input_rev_val;
+                x: 300; y: 590; width: 280; height: 40; placeholderText: "输入具体循环复习间隔(分钟)"
+                visible: cb_review.currentIndex > 0 && cb_type.currentIndex === 0;
+                validator: IntValidator{bottom: 1}
             }
 
             Button {
-                x: 20; y: 650; width: 560; height: 45; text: "确认保存并向主舱同步投放该任务"
+                x: 20;
+                y: 650; width: 560; height: 45; text: "确认保存并向主舱同步投放该任务"
                 onClicked: {
-                    var isRecFlag = cb_type.currentIndex;
-                    var pLevel = isRecFlag === 1 ? 1 : (cb_priority.currentIndex + 1);
-                    var rType = isRecFlag === 1 ? 0 : cb_review.currentIndex;
-                    var rInt = (isRecFlag === 0 && rType > 0) ? parseInt(input_rev_val.text || "60") : 0;
-                    var reward = parseInt(input_reward.text || "20");
-                    var durationHours = parseInt(input_hours.text || "24");
-                    var dl = new Date(taskManager.currentTime.getTime() + durationHours * 3600 * 1000);
+                    var isRecFlag = Number(cb_type.currentIndex);
+                    var pLevel = isRecFlag === 1 ? 1 : Number(cb_priority.currentIndex + 1);
+                    var rType = isRecFlag === 1 ? 0 : Number(cb_review.currentIndex);
+                    var rInt = (isRecFlag === 0 && rType > 0) ? (parseInt(input_rev_val.text) || 60) : 0;
+                    var reward = parseInt(input_reward.text) || 20;
+                    var durationHours = parseInt(input_hours.text) || 24; // 💡 直接获取纯数字小时数
 
-                    taskManager.addTask(input_name.text, pLevel, dl, rType, rInt, reward, isRecFlag);
+                    // 💡 修复重点：直接给C++传递纯数字基础参数类型，避开JS Date映射崩溃
+                    taskManager.addTask(input_name.text, pLevel, durationHours, rType, rInt, reward, isRecFlag);
                     input_name.clear(); input_reward.clear(); input_hours.clear(); input_rev_val.clear();
                 }
             }

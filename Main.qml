@@ -14,20 +14,17 @@ ApplicationWindow {
     color: "#B0F2DE"
     title: qsTr("VoltFlow 伏流")
 
-    // 接收全局通知的气泡数据槽
     property string alertMsg: ""
     property bool isReviewAlert: false
 
-    // 窗口物理坐标抖动动画
     SequentialAnimation {
         id: anim_shake
         loops: 2
-        NumberAnimation { target: window; property: "x"; to: window.x + 10; duration: 40 }
-        NumberAnimation { target: window; property: "x"; to: window.x - 10; duration: 40 }
-        NumberAnimation { target: window; property: "x"; to: window.x; duration: 40 }
+        NumberAnimation { target: stack; property: "x"; to: 12; duration: 40 }
+        NumberAnimation { target: stack; property: "x"; to: -12; duration: 40 }
+        NumberAnimation { target: stack; property: "x"; to: 0; duration: 40 }
     }
 
-    // 绑定 C++ 层震动和提醒触发器
     Connections {
         target: taskManager
         function onTriggerShake(msg, isReview) {
