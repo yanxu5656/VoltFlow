@@ -8,6 +8,20 @@ Item {
     width: 1600
     height: 900
 
+    ListModel {
+        id: alertsModel
+    }
+
+    Connections {
+        target: taskManager
+        function onTriggerShake(msg, isReview) {
+            alertsModel.append({
+                message: msg,
+                isReview: isReview
+            })
+        }
+    }
+
     Rectangle {
         id: rect_tasks
         x: 50
@@ -24,7 +38,7 @@ Item {
             color: "#34495E"
             font.pixelSize: 24
             font.bold: true
-                }
+        }
 
         Rectangle {
             x: 15
@@ -249,37 +263,47 @@ Item {
         }
     }
 
-    Rectangle {
-        id: pop_bubble
-        width: 260
-        height: 75
-        anchors.horizontalCenter: liubianxing.horizontalCenter
-        anchors.bottom: liubianxing.top
-        anchors.bottomMargin: -20
-        color: window.isReviewAlert ? "#FF6B6B" : "#FFBE76"
-        radius: 12
-        visible: window.alertMsg !== ""
-        Text {
-            anchors.fill: parent
-            anchors.margins: 10
-            text: window.alertMsg
-            color: "#FFFFD6"
-            font.pixelSize: 14
-            font.bold: true
-            wrapMode: Text.WordWrap
-            verticalAlignment: Text.AlignVCenter
-        }
-        Text {
-            text: "✖"
-            color: "#FFFFD6"
-            font.pixelSize: 14
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.topMargin: 6
-            anchors.rightMargin: 8
+    Repeater {
+        model: alertsModel
+        delegate: Rectangle {
+            width: 130
+            height: 130
+            radius: 65
+            color: model.isReview ? "#FF6B6B" : "#FFBE76"
+            z: 20
+            property var slotsX: [-190, 190, -210, 210, -180, 180]
+            property var slotsY: [-160, -160, 40, 40, 220, 220]
+            property int slotIndex: index % 6
+            x: liubianxing.x + liubianxing.width / 2 + slotsX[slotIndex] - width / 2
+            y: liubianxing.y + liubianxing.height / 2 + slotsY[slotIndex] - height / 2
+
+            Text {
+                anchors.fill: parent
+                anchors.margins: 15
+                text: model.message
+                color: "#FFFFFF"
+                font.pixelSize: 12
+                font.bold: true
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Text {
+                text: "×"
+                color: "#FFFFFF"
+                font.pixelSize: 14
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 12
+                anchors.rightMargin: 16
+            }
+
             MouseArea {
                 anchors.fill: parent
-                onClicked: window.alertMsg = ""
+                onClicked: {
+                    alertsModel.remove(index)
+                }
             }
         }
     }
@@ -363,21 +387,30 @@ Item {
                 ctx.clearRect(0, 0, width, height);
                 var dataset = taskManager.historicalEnergy;
                 if (dataset.length === 0) return;
-                var stepX = width / (dataset.length - 1);
+                var paddingLeft = 30;
+                var paddingRight = 30;
+                var paddingTop = 30;
+                var paddingBottom = 20;
+                var plotWidth = width - paddingLeft - paddingRight;
+                var plotHeight = height - paddingTop - paddingBottom;
+                var stepX = plotWidth / (dataset.length - 1);
                 ctx.strokeStyle = taskManager.isSuperCharged ? "#FFD700" : "#1ABC9C";
                 ctx.lineWidth = 4;
                 ctx.beginPath();
                 for (var j = 0; j < dataset.length; j++) {
-                    var ptY = height - (Math.min(dataset[j], 150) / 150.0) * (height - 20);
-                    if (j === 0) ctx.moveTo(0, ptY);
-                    else ctx.lineTo(j * stepX, ptY);
+                    var ratio = Math.min(dataset[j], 150) / 150.0;
+                    var ptX = paddingLeft + j * stepX;
+                    var ptY = paddingTop + plotHeight - (ratio * plotHeight);
+                    if (j === 0) ctx.moveTo(ptX, ptY);
+                    else ctx.lineTo(ptX, ptY);
                 }
                 ctx.stroke();
                 ctx.font = "bold 13px sans-serif";
                 ctx.textAlign = "center";
                 for (var k = 0; k < dataset.length; k++) {
-                    var pY = height - (Math.min(dataset[k], 150) / 150.0) * (height - 20);
-                    var pX = k * stepX;
+                    var r = Math.min(dataset[k], 150) / 150.0;
+                    var pX = paddingLeft + k * stepX;
+                    var pY = paddingTop + plotHeight - (r * plotHeight);
                     ctx.fillStyle = (k === dataset.length - 1) ? "#FF4500" : "#1ABC9C";
                     ctx.beginPath();
                     ctx.arc(pX, pY, 5, 0, 2 * Math.PI);
@@ -503,7 +536,11 @@ Item {
             y: 60
             width: 220
             height: 300
-            onClicked: stack.push("View_Task.qml")
+            onClicked: {
+                stack.dx = -stack.width
+                stack.dy = -stack.height
+                stack.push("View_Task.qml")
+            }
         }
     }
 
@@ -543,7 +580,11 @@ Item {
             y: 60
             width: 220
             height: 300
-            onClicked: stack.push("View_Set.qml")
+            onClicked: {
+                stack.dx = stack.width
+                stack.dy = -stack.height
+                stack.push("View_Set.qml")
+            }
         }
     }
 
@@ -583,7 +624,11 @@ Item {
             y: 730
             width: 120
             height: 150
-            onClicked: stack.push("View_Store.qml")
+            onClicked: {
+                stack.dx = 0
+                stack.dy = stack.height
+                stack.push("View_Store.qml")
+            }
         }
     }
 

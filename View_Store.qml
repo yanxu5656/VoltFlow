@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Shapes
+import QtQuick.Layouts
 
 Item {
     id: view_store
@@ -11,20 +11,80 @@ Item {
         anchors.fill: parent
         color: "#B0F2DE"
 
+        RowLayout {
+            x: 30
+            y: 20
+            spacing: 15
+            Button {
+                width: 70
+                height: 35
+                contentItem: Text {
+                    text: "返回"
+                    color: "white"
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                background: Rectangle {
+                    color: parent.pressed ? "#7F8C8D" : "#95A5A6"
+                    radius: 8
+                }
+                onClicked: stack.pop()
+            }
+            Rectangle {
+                width: 90
+                height: 35
+                color: "#B0E0E6"
+                radius: 8
+                Text {
+                    anchors.centerIn: parent
+                    text: "⚡ " + taskManager.currentEnergy + "%"
+                    color: "#34495E"
+                    font.bold: true
+                    font.pixelSize: 14
+                }
+            }
+            Rectangle {
+                width: 100
+                height: 35
+                color: "#B0E0E6"
+                radius: 8
+                Text {
+                    anchors.centerIn: parent
+                    text: "周: " + taskManager.weeklyEnergy
+                    color: "#34495E"
+                    font.bold: true
+                    font.pixelSize: 14
+                }
+            }
+            Rectangle {
+                width: 100
+                height: 35
+                color: "#B0E0E6"
+                radius: 8
+                Text {
+                    anchors.centerIn: parent
+                    text: "总: " + taskManager.totalEnergy
+                    color: "#34495E"
+                    font.bold: true
+                    font.pixelSize: 14
+                }
+            }
+        }
+
         Rectangle {
-            id: rect_store_box
+            id: rect_shop_box
             x: 50
-            y: 60
+            y: 80
             width: 600
             height: 700
             color: "#B0E0E6"
             radius: 24
 
             Text {
-                id: txt_store_title
                 x: 25
                 y: 20
-                text: "伏流能量商店"
+                text: "商店小铺商品列表"
                 color: "#34495E"
                 font.pixelSize: 24
                 font.bold: true
@@ -38,109 +98,175 @@ Item {
                 color: "#80FFFFFF"
                 radius: 16
 
-                Text {
-                    anchors.centerIn: parent
-                    text: "物资舱升级中，后续开放能量值兑换权益..."
-                    color: "#5D6D7E"
-                    font.pixelSize: 20
+                ListView {
+                    anchors.fill: parent
+                    anchors.margins: 15
+                    model: taskManager.storeItems
+                    clip: true
+                    spacing: 10
+                    delegate: Rectangle {
+                        width: parent.width
+                        height: 55
+                        color: "#F0F8FF"
+                        radius: 12
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            x: 15
+                            text: "📦 " + modelData.name
+                            color: "#2C3E50"
+                            font.pixelSize: 16
+                            font.bold: true
+                        }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: btn_buy.left
+                            anchors.rightMargin: 15
+                            text: "⚡ " + modelData.price
+                            color: "#E67E22"
+                            font.pixelSize: 15
+                            font.bold: true
+                        }
+                        Button {
+                            id: btn_buy
+                            anchors.right: parent.right
+                            anchors.rightMargin: 15
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 70
+                            height: 35
+                            contentItem: Text {
+                                text: "购买"
+                                color: "white"
+                                font.bold: true
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            background: Rectangle {
+                                color: taskManager.currentEnergy >= modelData.price ? (parent.pressed ? "#D35400" : "#E67E22") : "#BDC3C7"
+                                radius: 8
+                            }
+                            enabled: taskManager.currentEnergy >= modelData.price
+                            onClicked: taskManager.buyItem(modelData.id)
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: rect_manage_box
+            x: 690
+            y: 80
+            width: 650
+            height: 700
+            color: "#B0E0E6"
+            radius: 24
+
+            Text {
+                x: 25
+                y: 20
+                text: "商品上架与下架管理中枢"
+                color: "#34495E"
+                font.pixelSize: 24
+                font.bold: true
+            }
+
+            TextField {
+                id: input_item_name
+                x: 20
+                y: 70
+                width: 300
+                height: 40
+                placeholderText: "输入新商品名称..."
+                background: Rectangle {
+                    color: "white"
+                    radius: 10
+                }
+            }
+
+            TextField {
+                id: input_item_price
+                x: 340
+                y: 70
+                width: 130
+                height: 40
+                placeholderText: "消耗电量"
+                validator: IntValidator{bottom: 1}
+                background: Rectangle {
+                    color: "white"
+                    radius: 10
+                }
+            }
+
+            Button {
+                x: 490
+                y: 70
+                width: 140
+                height: 40
+                contentItem: Text {
+                    text: "上架商品"
+                    color: "white"
                     font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                background: Rectangle {
+                    color: parent.pressed ? "#16A085" : "#1ABC9C"
+                    radius: 10
+                }
+                onClicked: {
+                    taskManager.addStoreItem(input_item_name.text, parseInt(input_item_price.text || "10"));
+                    input_item_name.clear();
+                    input_item_price.clear();
                 }
             }
-        }
 
-        Shape {
-            id: sanjiaoxing_xia
-            width: 1600
-            height: 900
-            ShapePath {
-                strokeColor: "transparent"
-                fillColor: "#B0E0E6"
-                startX: 800
-                startY: 730
-                PathLine {
-                    x: 860
-                    y: 880
+            Rectangle {
+                x: 20
+                y: 135
+                width: 610
+                height: 545
+                color: "#80FFFFFF"
+                radius: 16
+
+                ListView {
+                    anchors.fill: parent
+                    anchors.margins: 15
+                    model: taskManager.storeItems
+                    clip: true
+                    spacing: 8
+                    delegate: Rectangle {
+                        width: parent.width
+                        height: 45
+                        color: "#F0F8FF"
+                        radius: 10
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            x: 15
+                            text: modelData.name + " (⚡" + modelData.price + ")"
+                            color: "#34495E"
+                            font.pixelSize: 15
+                        }
+                        Button {
+                            anchors.right: parent.right
+                            anchors.rightMargin: 15
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 70
+                            height: 30
+                            contentItem: Text {
+                                text: "下架"
+                                color: "white"
+                                font.bold: true
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            background: Rectangle {
+                                color: parent.pressed ? "#C0392B" : "#E74C3C"
+                                radius: 6
+                            }
+                            onClicked: taskManager.removeStoreItem(modelData.id)
+                        }
+                    }
                 }
-                PathLine {
-                    x: 740
-                    y: 880
-                }
-                PathLine {
-                    x: 800
-                    y: 730
-                }
-            }
-            MouseArea {
-                x: 740
-                y: 730
-                width: 120
-                height: 150
-                onClicked: stack.pop()
-            }
-        }
-
-        Text {
-            x: 776
-            y: 815
-            text: "返回"
-            color: "#34495E"
-            font.pixelSize: 24
-            font.bold: true
-        }
-
-        Rectangle {
-            id: rect_weekly
-            x: 575
-            y: 755
-            width: 150
-            height: 90
-            color: "#B0E0E6"
-            radius: 14
-            Text {
-                id: label_weekly
-                anchors.horizontalCenter: parent.horizontalCenter
-                y: 15
-                text: "周能量值"
-                color: "#34495E"
-                font.pixelSize: 22
-                font.bold: true
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: label_weekly.bottom
-                anchors.topMargin: 5
-                text: taskManager.weeklyEnergy
-                color: "#1ABC9C"
-                font.pixelSize: 20
-                font.bold: true
-            }
-        }
-
-        Rectangle {
-            id: rect_total
-            x: 875
-            y: 755
-            width: 150
-            height: 90
-            color: "#B0E0E6"
-            radius: 14
-            Text {
-                id: label_total
-                anchors.horizontalCenter: parent.horizontalCenter
-                y: 15
-                text: "总能量值"
-                color: "#34495E"
-                font.pixelSize: 22
-                font.bold: true
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: label_total.bottom
-                anchors.topMargin: 5
-                text: taskManager.totalEnergy
-                color: "#1ABC9C"
-                font.pixelSize: 20
-                font.bold: true
             }
         }
     }

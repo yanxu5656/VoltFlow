@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Item {
     id: view_task
@@ -10,37 +11,90 @@ Item {
         anchors.fill: parent
         color: "#B0F2DE"
 
+        RowLayout {
+            x: 30
+            y: 20
+            spacing: 15
+            Button {
+                width: 70
+                height: 35
+                contentItem: Text {
+                    text: "返回"
+                    color: "white"
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                background: Rectangle {
+                    color: parent.pressed ? "#7F8C8D" : "#95A5A6"
+                    radius: 8
+                }
+                onClicked: stack.pop()
+            }
+            Rectangle {
+                width: 90
+                height: 35
+                color: "#B0E0E6"
+                radius: 8
+                Text {
+                    anchors.centerIn: parent
+                    text: "⚡ " + taskManager.currentEnergy + "%"
+                    color: "#34495E"
+                    font.bold: true
+                    font.pixelSize: 14
+                }
+            }
+            Rectangle {
+                width: 100
+                height: 35
+                color: "#B0E0E6"
+                radius: 8
+                Text {
+                    anchors.centerIn: parent
+                    text: "周: " + taskManager.weeklyEnergy
+                    color: "#34495E"
+                    font.bold: true
+                    font.pixelSize: 14
+                }
+            }
+            Rectangle {
+                width: 100
+                height: 35
+                color: "#B0E0E6"
+                radius: 8
+                Text {
+                    anchors.centerIn: parent
+                    text: "总: " + taskManager.totalEnergy
+                    color: "#34495E"
+                    font.bold: true
+                    font.pixelSize: 14
+                }
+            }
+        }
+
         Rectangle {
-            id: rect_box
+            id: rect_recs_box
             x: 50
-            y: 60
+            y: 80
             width: 600
-            height: 780
+            height: 350
             color: "#B0E0E6"
             radius: 24
 
             Text {
-                id: txt_title
                 x: 25
                 y: 20
-                text: "任务与系统推荐配置面板"
+                text: "每日系统推荐任务清单"
                 color: "#34495E"
                 font.pixelSize: 24
                 font.bold: true
             }
 
-            Text {
-                x: 25
-                y: 65
-                text: "点击下方系统推荐项，可直接载入详细编辑区:"
-                color: "#5D6D7E"
-                font.pixelSize: 14
-            }
             Rectangle {
                 x: 20
-                y: 90
+                y: 70
                 width: 560
-                height: 140
+                height: 250
                 color: "#80FFFFFF"
                 radius: 16
 
@@ -49,10 +103,10 @@ Item {
                     anchors.margins: 10
                     model: taskManager.sysRecs
                     clip: true
-                    spacing: 6
+                    spacing: 8
                     delegate: Rectangle {
                         width: parent.width
-                        height: 40
+                        height: 45
                         color: "#F0F8FF"
                         radius: 10
                         Text {
@@ -93,19 +147,31 @@ Item {
                     }
                 }
             }
+        }
+
+        Rectangle {
+            id: rect_active_box
+            x: 50
+            y: 450
+            width: 600
+            height: 380
+            color: "#B0E0E6"
+            radius: 24
 
             Text {
                 x: 25
-                y: 245
-                text: "当前正在执行中的活动任务列表:"
-                color: "#5D6D7E"
-                font.pixelSize: 14
+                y: 20
+                text: "活动执行任务监视栏"
+                color: "#34495E"
+                font.pixelSize: 24
+                font.bold: true
             }
+
             Rectangle {
                 x: 20
-                y: 270
+                y: 70
                 width: 560
-                height: 180
+                height: 280
                 color: "#80FFFFFF"
                 radius: 16
 
@@ -114,10 +180,10 @@ Item {
                     anchors.margins: 10
                     model: taskManager.userTasks
                     clip: true
-                    spacing: 6
+                    spacing: 8
                     delegate: Rectangle {
                         width: parent.width
-                        height: 40
+                        height: 45
                         color: "#F0F8FF"
                         radius: 10
                         Text {
@@ -142,12 +208,31 @@ Item {
                     }
                 }
             }
+        }
+
+        Rectangle {
+            id: rect_add_box
+            x: 690
+            y: 80
+            width: 650
+            height: 480
+            color: "#B0E0E6"
+            radius: 24
+
+            Text {
+                x: 25
+                y: 20
+                text: "任务发布与投放面板"
+                color: "#34495E"
+                font.pixelSize: 24
+                font.bold: true
+            }
 
             TextField {
                 id: input_name
                 x: 20
-                y: 480
-                width: 380
+                y: 70
+                width: 410
                 height: 40
                 placeholderText: "输入正在编辑的任务主题具体内容..."
                 background: Rectangle {
@@ -155,11 +240,12 @@ Item {
                     radius: 10
                 }
             }
+
             ComboBox {
                 id: cb_type
-                x: 410
-                y: 480
-                width: 170
+                x: 450
+                y: 70
+                width: 180
                 height: 40
                 model: ["普通任务", "系统推荐属性"]
                 currentIndex: 0
@@ -168,8 +254,8 @@ Item {
             TextField {
                 id: input_reward
                 x: 20
-                y: 535
-                width: 180
+                y: 130
+                width: 195
                 height: 40
                 placeholderText: "能量加分(如25)"
                 validator: IntValidator{bottom: 1}
@@ -178,11 +264,12 @@ Item {
                     radius: 10
                 }
             }
+
             TextField {
                 id: input_hours
-                x: 210
-                y: 535
-                width: 180
+                x: 235
+                y: 130
+                width: 195
                 height: 40
                 placeholderText: "限时完成(小时)"
                 validator: IntValidator{bottom: 1}
@@ -191,10 +278,11 @@ Item {
                     radius: 10
                 }
             }
+
             ComboBox {
                 id: cb_priority
-                x: 400
-                y: 535
+                x: 450
+                y: 130
                 width: 180
                 height: 40
                 model: ["优先级 1 (低)", "优先级 2", "优先级 3", "优先级 4", "优先级 5 (高)"]
@@ -205,18 +293,19 @@ Item {
             ComboBox {
                 id: cb_review
                 x: 20
-                y: 590
-                width: 260
+                y: 190
+                width: 250
                 height: 40
                 model: ["关闭留存复习提醒", "开启自定分钟循环", "开启艾宾浩斯判定"]
                 currentIndex: 0
                 visible: cb_type.currentIndex === 0
             }
+
             TextField {
                 id: input_rev_val
-                x: 300
-                y: 590
-                width: 280
+                x: 290
+                y: 190
+                width: 340
                 height: 40
                 placeholderText: "输入具体循环复习间隔(分钟)"
                 visible: cb_review.currentIndex > 0 && cb_type.currentIndex === 0
@@ -229,8 +318,8 @@ Item {
 
             Button {
                 x: 20
-                y: 650
-                width: 560
+                y: 260
+                width: 610
                 height: 45
                 contentItem: Text {
                     text: "确认保存并向主舱同步投放该任务"
@@ -258,11 +347,19 @@ Item {
                 }
             }
 
+            Rectangle {
+                x: 20
+                y: 330
+                width: 610
+                height: 2
+                color: "#80FFFFFF"
+            }
+
             TextField {
                 id: input_new_pool
                 x: 20
-                y: 720
-                width: 380
+                y: 360
+                width: 410
                 height: 40
                 placeholderText: "向推荐候选大池中永久追加新条目..."
                 background: Rectangle {
@@ -270,10 +367,11 @@ Item {
                     radius: 10
                 }
             }
+
             Button {
-                x: 410
-                y: 720
-                width: 170
+                x: 450
+                y: 360
+                width: 180
                 height: 40
                 contentItem: Text {
                     text: "确认追加候选"
@@ -293,24 +391,43 @@ Item {
             }
         }
 
-        Button {
-            x: 740
-            y: 750
-            width: 120
-            height: 50
-            contentItem: Text {
-                text: "返回大厅"
-                color: "white"
-                font.pixelSize: 16
+        Rectangle {
+            id: rect_priority_rules
+            x: 690
+            y: 580
+            width: 650
+            height: 250
+            color: "#B0E0E6"
+            radius: 24
+
+            Text {
+                x: 25
+                y: 20
+                text: "核心任务优先级临期警告机制说明"
+                color: "#34495E"
+                font.pixelSize: 22
                 font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
             }
-            background: Rectangle {
-                color: "#95A5A6"
-                radius: 12
+
+            Rectangle {
+                x: 15
+                y: 65
+                width: 620
+                height: 165
+                color: "#80FFFFFF"
+                radius: 16
+
+                Text {
+                    x: 20
+                    y: 15
+                    width: 580
+                    text: "• 优先级 P5 (最高级) : 每隔 1 小时 触发一次临期物理抖动预警\n• 优先级 P4 (次高级) : 每隔 3 小时 触发一次临期物理抖动预警\n• 优先级 P3 (中级档) : 每隔 6 小时 触发一次临期物理抖动预警\n• 优先级 P2 (次低级) : 每隔 12 小时 触发一次临期物理抖动预警\n• 优先级 P1 (最低级) : 每隔 24 小时 触发一次临期物理抖动预警\n高优先级任务在逼近截止期时，会强制中枢以极高的频率进行密集弹窗及晃动提醒。"
+                    color: "#5D6D7E"
+                    font.pixelSize: 10
+                    lineHeight: 1.5
+                    wrapMode: Text.WordWrap
+                }
             }
-            onClicked: stack.pop()
         }
     }
 }

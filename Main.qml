@@ -51,5 +51,71 @@ ApplicationWindow {
         id: stack
         anchors.fill: parent
         initialItem: View_Main{}
+        property real dx: 0
+        property real dy: 0
+        pushEnter: Transition {
+            NumberAnimation {
+                property: "x"
+                from: stack.dx
+                to: 0
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                property: "y"
+                from: stack.dy
+                to: 0
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+        }
+        pushExit: Transition {
+            NumberAnimation {
+                property: "x"
+                from: 0
+                to: -stack.dx
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                property: "y"
+                from: 0
+                to: -stack.dy
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+        }
+        popEnter: Transition {
+            NumberAnimation {
+                property: "x"
+                from: -stack.dx
+                to: 0
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                property: "y"
+                from: -stack.dy
+                to: 0
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+        }
+        popExit: Transition {
+            NumberAnimation {
+                property: "x"
+                from: 0
+                to: stack.dx
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                property: "y"
+                from: 0
+                to: stack.dy
+                duration: 400
+                easing.type: Easing.OutCubic
+            }
+        }
     }
 }
