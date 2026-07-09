@@ -1,4 +1,3 @@
-// 任务管理头文件：将截止时间计算收归后端，规避QML时间类型转换陷阱
 #ifndef TASKMANAGER_H
 #define TASKMANAGER_H
 
@@ -18,10 +17,10 @@ class TaskManager : public QObject {
     Q_PROPERTY(int tasksAddedToday READ tasksAddedToday NOTIFY statsChanged)
     Q_PROPERTY(int taskCompletionRate READ taskCompletionRate NOTIFY statsChanged)
     Q_PROPERTY(QDateTime currentTime READ currentTime NOTIFY timeChanged)
+    Q_PROPERTY(QVariantList historicalEnergy READ historicalEnergy NOTIFY historicalEnergyChanged)
 
 public:
     explicit TaskManager(QObject *parent = nullptr);
-
     QVariantList userTasks() const { return m_user_tasks; }
     QVariantList sysRecs() const { return m_sys_recs; }
     int currentEnergy() const { return m_current_energy; }
@@ -34,13 +33,15 @@ public:
         return (m_tasks_completed * 100) / m_tasks_added;
     }
     QDateTime currentTime() const { return m_current_time; }
+    QVariantList historicalEnergy() const;
 
-    // 💡 优化：将QDateTime替换为整型小时数durationHours
     Q_INVOKABLE void addTask(const QString &name, int priority, int durationHours, int reviewType, int reviewInt, int reward, int isRec);
     Q_INVOKABLE void completeTask(int id);
     Q_INVOKABLE void removeTask(int id, bool isPool = false);
     Q_INVOKABLE void addRecPool(const QString &name);
     Q_INVOKABLE void addDemoTime(int hours);
+    Q_INVOKABLE void clearDatabase();
+    Q_INVOKABLE void activateRecommendation(const QString &name);
 
 signals:
     void userTasksChanged();
@@ -48,6 +49,7 @@ signals:
     void energyChanged();
     void statsChanged();
     void timeChanged();
+    void historicalEnergyChanged();
     void triggerShake(const QString &msg, bool isReview);
 
 private slots:
@@ -63,13 +65,11 @@ private:
 
     QVariantList m_user_tasks;
     QVariantList m_sys_recs;
-
     int m_current_energy = 100;
     int m_weekly_energy = 0;
     int m_total_energy = 0;
     int m_tasks_added = 0;
     int m_tasks_completed = 0;
-
     QDateTime m_current_time;
     QTimer *m_timer;
     int m_last_hour;

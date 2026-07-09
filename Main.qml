@@ -1,4 +1,3 @@
-// 核心承载窗口：提供全局抖动动画框架，捕获并执行物理窗口抖动逻辑
 import QtQuick
 import QtQuick.Controls
 
@@ -13,16 +12,30 @@ ApplicationWindow {
     visible: true
     color: "#B0F2DE"
     title: qsTr("VoltFlow 伏流")
-
     property string alertMsg: ""
     property bool isReviewAlert: false
 
     SequentialAnimation {
         id: anim_shake
         loops: 2
-        NumberAnimation { target: stack; property: "x"; to: 12; duration: 40 }
-        NumberAnimation { target: stack; property: "x"; to: -12; duration: 40 }
-        NumberAnimation { target: stack; property: "x"; to: 0; duration: 40 }
+        NumberAnimation {
+            target: stack
+            property: "x"
+            to: 12
+            duration: 40
+        }
+        NumberAnimation {
+            target: stack
+            property: "x"
+            to: -12
+            duration: 40
+        }
+        NumberAnimation {
+            target: stack
+            property: "x"
+            to: 0
+            duration: 40
+        }
     }
 
     Connections {

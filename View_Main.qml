@@ -1,4 +1,3 @@
-// 主厅视图：修复qMin为Math.min环境函数，确保电量填充与Canvas趋势线绘制稳健
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -15,103 +14,85 @@ Item {
         y: 60
         width: 470
         height: 480
-        color: "#8ED9F6"
-        border.color: "#1ABC9C"
-        border.width: 4
+        color: "#B0E0E6"
+        radius: 20
 
         Text {
-            x: 20
-            y: 15
-            text: "自定义任务列表"
-            color: "#FFFFD6"
+            x: 25
+            y: 20
+            text: "任务列表"
+            color: "#34495E"
             font.pixelSize: 24
             font.bold: true
-        }
+                }
 
         Rectangle {
-            x: 20
-            y: 60
-            width: 430
-            height: 400
-            color: "#ADCEC8"
-            border.color: "#1ABC9C"
-            border.width: 2
+            x: 15
+            y: 70
+            width: 440
+            height: 390
+            color: "#80FFFFFF"
+            radius: 16
 
             ListView {
                 anchors.fill: parent
                 anchors.margins: 10
                 model: taskManager.userTasks
                 clip: true
-                spacing: 12
-
+                spacing: 10
                 delegate: Rectangle {
                     width: parent.width
-                    height: 110
-                    color: "#25000000"
-                    border.color: "#1ABC9C"
-                    border.width: 2
-                    radius: 8
+                    height: 115
+                    color: "#F0F8FF"
+                    radius: 12
 
                     Rectangle {
                         anchors.fill: parent
                         color: modelData.is_rec === 1 ? "#20FFD700" : "transparent"
-                        radius: 6
+                        radius: 12
                     }
 
                     ColumnLayout {
                         anchors.left: parent.left
                         anchors.leftMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 8
-
+                        spacing: 6
                         Text {
                             text: (modelData.is_rec === 1 ? "💡 [推荐] " : "📌 [自定] ") + modelData.name
-                            color: "#FFFFD6"
+                            color: "#2C3E50"
                             font.pixelSize: 17
                             font.bold: true
                         }
-
-                        RowLayout {
-                            spacing: 20
-                            Text {
-                                text: "🔥 优先级: P" + modelData.priority
-                                color: "#FFBE76"
-                                font.pixelSize: 13
-                            }
-                            Text {
-                                text: "⚡ 能量奖励: +" + modelData.energy_reward
-                                color: "#1ABC9C"
-                                font.pixelSize: 14
-                                font.bold: true
-                            }
+                        Text {
+                            text: "🔥 P" + modelData.priority + " | ⚡奖励: +" + modelData.energy_reward
+                            color: "#7F8C8D"
+                            font.pixelSize: 13
                         }
-
-                        RowLayout {
-                            spacing: 15
-                            Text {
-                                text: "🔄 复习: " + (modelData.review_type === 0 ? "未开启" : (modelData.review_type === 1 ? "自定义循环" : "艾宾浩斯"))
-                                color: "#FFFFD6"
-                                font.pixelSize: 13
-                            }
-                            Text {
-                                text: "🗓️ 截止: " + Qt.formatDateTime(modelData.deadline, "MM-dd HH:mm")
-                                color: "#FF6B6B"
-                                font.pixelSize: 13
-                                font.bold: true
-                            }
+                        Text {
+                            text: "🗓️ " + Qt.formatDateTime(modelData.deadline, "MM-dd HH:mm")
+                            color: "#1ABC9C"
+                            font.pixelSize: 13
+                            font.bold: true
                         }
                     }
 
                     Button {
-                        id: btn_done
                         anchors.right: parent.right
                         anchors.rightMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
-                        width: 80
-                        height: 45
-                        text: "结束"
-                        font.pixelSize: 16
-                        font.bold: true
+                        width: 70
+                        height: 40
+                        contentItem: Text {
+                            text: "结束"
+                            color: "white"
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        background: Rectangle {
+                            color: parent.pressed ? "#16A085" : "#1ABC9C"
+                            radius: 8
+                        }
                         onClicked: taskManager.completeTask(modelData.id)
                     }
                 }
@@ -125,42 +106,64 @@ Item {
         y: 560
         width: 470
         height: 320
-        color: "#8ED9F6"
-        border.color: "#1ABC9C"
-        border.width: 4
+        color: "#B0E0E6"
+        radius: 20
 
         Text {
-            x: 20
+            x: 25
             y: 15
-            text: "系统推荐列表"
-            color: "#FFFFD6"
-            font.pixelSize: 24
+            text: "系统推荐任务"
+            color: "#34495E"
+            font.pixelSize: 22
             font.bold: true
         }
 
         Rectangle {
-            x: 20
-            y: 60
-            width: 430
-            height: 240
-            color: "#ADCEC8"
-            border.color: "#1ABC9C"
-            border.width: 2
-
+            x: 15
+            y: 55
+            width: 440
+            height: 250
+            color: "#80FFFFFF"
+            radius: 16
             ListView {
                 anchors.fill: parent
                 anchors.margins: 10
                 model: taskManager.sysRecs
                 clip: true
-                spacing: 6
+                spacing: 10
                 delegate: Rectangle {
                     width: parent.width
-                    height: 45
-                    color: "#12000000"
-                    border.color: "#1ABC9C"
-                    border.width: 1
-                    radius: 4
-                    Text { anchors.verticalCenter: parent.verticalCenter; x: 12; text: "💡 " + modelData.name; color: "#FFFFD6"; font.pixelSize: 15 }
+                    height: 50
+                    color: "#F0F8FF"
+                    radius: 10
+                    Text {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 15
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "💡 " + modelData.name
+                        color: "#34495E"
+                        font.pixelSize: 15
+                        font.bold: true
+                    }
+                    Button {
+                        anchors.right: parent.right
+                        anchors.rightMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 65
+                        height: 32
+                        contentItem: Text {
+                            text: "激活"
+                            color: "white"
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        background: Rectangle {
+                            color: parent.pressed ? "#2C3E50" : "#34495E"
+                            radius: 6
+                        }
+                        onClicked: taskManager.activateRecommendation(modelData.name)
+                    }
                 }
             }
         }
@@ -174,17 +177,34 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 40
         ShapePath {
-            strokeColor: "#1ABC9C"
-            strokeWidth: 5
-            fillColor: "#ADCEC8"
+            strokeColor: "transparent"
+            fillColor: "#B0E0E6"
             startX: liubianxing.width / 2
             startY: 10
-            PathLine { x: liubianxing.width - 10; y: 10 + (liubianxing.height - 20) * 0.25 }
-            PathLine { x: liubianxing.width - 10; y: 10 + (liubianxing.height - 20) * 0.75 }
-            PathLine { x: liubianxing.width / 2; y: liubianxing.height - 10 }
-            PathLine { x: 10; y: 10 + (liubianxing.height - 20) * 0.75 }
-            PathLine { x: 10; y: 10 + (liubianxing.height - 20) * 0.25 }
-            PathLine { x: liubianxing.width / 2; y: 10 }
+            PathLine {
+                x: liubianxing.width - 10
+                y: 10 + (liubianxing.height - 20) * 0.25
+            }
+            PathLine {
+                x: liubianxing.width - 10
+                y: 10 + (liubianxing.height - 20) * 0.75
+            }
+            PathLine {
+                x: liubianxing.width / 2
+                y: liubianxing.height - 10
+            }
+            PathLine {
+                x: 10
+                y: 10 + (liubianxing.height - 20) * 0.75
+            }
+            PathLine {
+                x: 10
+                y: 10 + (liubianxing.height - 20) * 0.25
+            }
+            PathLine {
+                x: liubianxing.width / 2
+                y: 10
+            }
         }
     }
 
@@ -195,45 +215,37 @@ Item {
         anchors.centerIn: liubianxing
         Rectangle {
             anchors.fill: parent
-            color: "transparent"
-            border.color: taskManager.isSuperCharged ? "#FFD700" : "#1ABC9C"
-            border.width: 4
-            radius: 8
+            color: "#40FFFFFF"
+            radius: 15
             Rectangle {
                 width: 40
                 height: 12
-                color: parent.border.color
+                color: "#B0E0E6"
                 anchors.bottom: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                radius: 3
+                radius: 4
             }
             Rectangle {
                 width: parent.width - 16
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 8
-                // 💡 修复：将qMin替换为Math.min
                 height: (parent.height - 16) * (Math.min(taskManager.currentEnergy, 100) / 100.0)
                 color: taskManager.isSuperCharged ? "#FFD700" : "#1ABC9C"
-                radius: 4
-                Behavior on height { NumberAnimation { duration: 400 } }
+                radius: 10
+                Behavior on height {
+                    NumberAnimation {
+                        duration: 400
+                    }
+                }
             }
             Text {
                 anchors.centerIn: parent
                 text: taskManager.currentEnergy + "%"
-                color: taskManager.isSuperCharged ? "#FF4500" : "#FFFFD6"
-                font.pixelSize: 28
+                color: "#2C3E50"
+                font.pixelSize: 32
                 font.bold: true
             }
-        }
-        PropertyAnimation {
-            target: core_battery
-            property: "opacity"
-            from: 0.6
-            to: 1.0
-            duration: 800
-            running: taskManager.isSuperCharged
-            loops: Animation.Infinite
         }
     }
 
@@ -247,8 +259,6 @@ Item {
         color: window.isReviewAlert ? "#FF6B6B" : "#FFBE76"
         radius: 12
         visible: window.alertMsg !== ""
-        border.color: "#FFFFD6"
-        border.width: 2
         Text {
             anchors.fill: parent
             anchors.margins: 10
@@ -267,7 +277,10 @@ Item {
             anchors.right: parent.right
             anchors.topMargin: 6
             anchors.rightMargin: 8
-            MouseArea { anchors.fill: parent; onClicked: window.alertMsg = "" }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: window.alertMsg = ""
+            }
         }
     }
 
@@ -277,22 +290,49 @@ Item {
         y: 60
         width: 470
         height: 200
-        color: "#8ED9F6"
-        border.color: "#1ABC9C"
-        border.width: 4
-        Text { x: 20; y: 15; text: "今日数据分析"; color: "#FFFFD6"; font.pixelSize: 24; font.bold: true }
+        color: "#B0E0E6"
+        radius: 20
+        Text {
+            x: 25
+            y: 20
+            text: "今日效率洞察"
+            color: "#34495E"
+            font.pixelSize: 24
+            font.bold: true
+        }
         RowLayout {
-            x: 20
-            y: 70
-            width: 430
-            spacing: 50
-            ColumnLayout {
-                Text { text: "今日添加数"; color: "#FFFFD6"; font.pixelSize: 18; font.bold: true; Layout.alignment: Qt.AlignHCenter }
-                Text { text: taskManager.tasksAddedToday.toString(); color: "#1ABC9C"; font.pixelSize: 40; font.bold: true; Layout.alignment: Qt.AlignHCenter }
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: 20
+            spacing: 60
+            Column {
+                Text {
+                    text: "今日添加"
+                    color: "#7F8C8D"
+                    font.pixelSize: 16
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+                Text {
+                    text: taskManager.tasksAddedToday
+                    color: "#1ABC9C"
+                    font.pixelSize: 44
+                    font.bold: true
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
             }
-            ColumnLayout {
-                Text { text: "当前完成率"; color: "#FFFFD6"; font.pixelSize: 18; font.bold: true; Layout.alignment: Qt.AlignHCenter }
-                Text { text: taskManager.taskCompletionRate + "%"; color: "#1ABC9C"; font.pixelSize: 40; font.bold: true; Layout.alignment: Qt.AlignHCenter }
+            Column {
+                Text {
+                    text: "完成率"
+                    color: "#7F8C8D"
+                    font.pixelSize: 16
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+                Text {
+                    text: taskManager.taskCompletionRate + "%"
+                    color: "#1ABC9C"
+                    font.pixelSize: 44
+                    font.bold: true
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
             }
         }
     }
@@ -303,48 +343,54 @@ Item {
         y: 300
         width: 470
         height: 580
-        color: "#8ED9F6"
-        border.color: "#1ABC9C"
-        border.width: 4
-        Text { x: 20; y: 15; text: "周期能量流转趋势"; color: "#FFFFD6"; font.pixelSize: 24; font.bold: true }
+        color: "#B0E0E6"
+        radius: 20
+        Text {
+            x: 25
+            y: 20
+            text: "周期注能趋势"
+            color: "#34495E"
+            font.pixelSize: 24
+            font.bold: true
+        }
         Canvas {
             id: canvas_line
             anchors.fill: parent
-            anchors.topMargin: 70
-            anchors.bottomMargin: 30
-            anchors.leftMargin: 30
-            anchors.rightMargin: 30
+            anchors.margins: 40
+            anchors.topMargin: 90
             onPaint: {
                 var ctx = getContext("2d");
                 ctx.clearRect(0, 0, width, height);
-                ctx.strokeStyle = "#251ABC9C";
-                ctx.lineWidth = 1;
-                for (var i = 0; i <= 4; i++) {
-                    var yGrid = height * (i / 4);
-                    ctx.beginPath(); ctx.moveTo(0, yGrid); ctx.lineTo(width, yGrid); ctx.stroke();
-                }
-                // 💡 修复：将qMin替换为Math.min
-                var dataset = [45, 60, 85, 40, 95, 70, Math.min(taskManager.currentEnergy, 150)];
+                var dataset = taskManager.historicalEnergy;
+                if (dataset.length === 0) return;
                 var stepX = width / (dataset.length - 1);
                 ctx.strokeStyle = taskManager.isSuperCharged ? "#FFD700" : "#1ABC9C";
-                ctx.lineWidth = 3; ctx.beginPath();
+                ctx.lineWidth = 4;
+                ctx.beginPath();
                 for (var j = 0; j < dataset.length; j++) {
-                    var ptY = height - (dataset[j] / 150.0) * height;
-                    var ptX = j * stepX;
-                    if (j === 0) ctx.moveTo(ptX, ptY);
-                    else ctx.lineTo(ptX, ptY);
+                    var ptY = height - (Math.min(dataset[j], 150) / 150.0) * (height - 20);
+                    if (j === 0) ctx.moveTo(0, ptY);
+                    else ctx.lineTo(j * stepX, ptY);
                 }
                 ctx.stroke();
+                ctx.font = "bold 13px sans-serif";
+                ctx.textAlign = "center";
                 for (var k = 0; k < dataset.length; k++) {
-                    var pY = height - (dataset[k] / 150.0) * height;
+                    var pY = height - (Math.min(dataset[k], 150) / 150.0) * (height - 20);
                     var pX = k * stepX;
-                    ctx.fillStyle = (k === dataset.length - 1) ? (taskManager.isSuperCharged ? "#FF4500" : "#FFFFD6") : "#1ABC9C";
-                    ctx.beginPath(); ctx.arc(pX, pY, 5, 0, 2 * Math.PI); ctx.fill();
+                    ctx.fillStyle = (k === dataset.length - 1) ? "#FF4500" : "#1ABC9C";
+                    ctx.beginPath();
+                    ctx.arc(pX, pY, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = "#34495E";
+                    ctx.fillText(dataset[k].toString(), pX, pY - 12);
                 }
             }
             Connections {
                 target: taskManager
-                function onEnergyChanged() { canvas_line.requestPaint(); }
+                function onHistoricalEnergyChanged() {
+                    canvas_line.requestPaint();
+                }
             }
         }
     }
@@ -380,11 +426,26 @@ Item {
         y: 755
         width: 150
         height: 90
-        color: "#8ED9F6"
-        border.color: "#1ABC9C"
-        border.width: 4
-        Text { id: label_weekly; anchors.horizontalCenter: parent.horizontalCenter; y: 15; text: "周能量值"; color: "#FFFFD6"; font.pixelSize: 22; font.bold: true }
-        Text { anchors.horizontalCenter: parent.horizontalCenter; anchors.top: label_weekly.bottom; anchors.topMargin: 5; text: taskManager.weeklyEnergy; color: "#FFFFD6"; font.pixelSize: 20; font.bold: true }
+        color: "#B0E0E6"
+        radius: 14
+        Text {
+            id: label_weekly
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: 15
+            text: "周能量值"
+            color: "#34495E"
+            font.pixelSize: 22
+            font.bold: true
+        }
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: label_weekly.bottom
+            anchors.topMargin: 5
+            text: taskManager.weeklyEnergy
+            color: "#1ABC9C"
+            font.pixelSize: 20
+            font.bold: true
+        }
     }
 
     Rectangle {
@@ -393,37 +454,145 @@ Item {
         y: 755
         width: 150
         height: 90
-        color: "#8ED9F6"
-        border.color: "#1ABC9C"
-        border.width: 4
-        Text { id: label_total; anchors.horizontalCenter: parent.horizontalCenter; y: 15; text: "总能量值"; color: "#FFFFD6"; font.pixelSize: 22; font.bold: true }
-        Text { anchors.horizontalCenter: parent.horizontalCenter; anchors.top: label_total.bottom; anchors.topMargin: 5; text: taskManager.totalEnergy; color: "#FFFFD6"; font.pixelSize: 20; font.bold: true }
+        color: "#B0E0E6"
+        radius: 14
+        Text {
+            id: label_total
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: 15
+            text: "总能量值"
+            color: "#34495E"
+            font.pixelSize: 22
+            font.bold: true
+        }
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: label_total.bottom
+            anchors.topMargin: 5
+            text: taskManager.totalEnergy
+            color: "#1ABC9C"
+            font.pixelSize: 20
+            font.bold: true
+        }
     }
 
     Shape {
         id: sanjiaoxing_zuo
         width: 1600
         height: 900
-        ShapePath { strokeColor: "#1ABC9C"; strokeWidth: 4; fillColor: "#8ED9F6"; startX: 570; startY: 360; PathLine { x: 570; y: 60 } PathLine { x: 790; y: 250 } PathLine { x: 570; y: 360 } }
-        MouseArea { x: 570; y: 60; width: 220; height: 300; onClicked: stack.push("View_Task.qml") }
+        ShapePath {
+            strokeColor: "transparent"
+            fillColor: "#B0E0E6"
+            startX: 570
+            startY: 360
+            PathLine {
+                x: 570
+                y: 60
+            }
+            PathLine {
+                x: 790
+                y: 250
+            }
+            PathLine {
+                x: 570
+                y: 360
+            }
+        }
+        MouseArea {
+            x: 570
+            y: 60
+            width: 220
+            height: 300
+            onClicked: stack.push("View_Task.qml")
+        }
     }
-    Text { x: 590; y: 215; text: "管理任务"; color: "#FFFFD6"; font.pixelSize: 24; font.bold: true }
+
+    Text {
+        x: 590
+        y: 215
+        text: "管理任务"
+        color: "#34495E"
+        font.pixelSize: 24
+        font.bold: true
+    }
 
     Shape {
         id: sanjiaoxing_you
         width: 1600
         height: 900
-        ShapePath { strokeColor: "#1ABC9C"; strokeWidth: 4; fillColor: "#8ED9F6"; startX: 1030; startY: 360; PathLine { x: 1030; y: 60 } PathLine { x: 810; y: 250 } PathLine { x: 1030; y: 360 } }
-        MouseArea { x: 810; y: 60; width: 220; height: 300; onClicked: stack.push("View_Set.qml") }
+        ShapePath {
+            strokeColor: "transparent"
+            fillColor: "#B0E0E6"
+            startX: 1030
+            startY: 360
+            PathLine {
+                x: 1030
+                y: 60
+            }
+            PathLine {
+                x: 810
+                y: 250
+            }
+            PathLine {
+                x: 1030
+                y: 360
+            }
+        }
+        MouseArea {
+            x: 810
+            y: 60
+            width: 220
+            height: 300
+            onClicked: stack.push("View_Set.qml")
+        }
     }
-    Text { x: 890; y: 215; text: "时间设置"; color: "#FFFFD6"; font.pixelSize: 24; font.bold: true }
+
+    Text {
+        x: 890
+        y: 215
+        text: "时间设置"
+        color: "#34495E"
+        font.pixelSize: 24
+        font.bold: true
+    }
 
     Shape {
         id: sanjiaoxing_xia
         width: 1600
         height: 900
-        ShapePath { strokeColor: "#1ABC9C"; strokeWidth: 4; fillColor: "#8ED9F6"; startX: 800; startY: 730; PathLine { x: 860; y: 880 } PathLine { x: 740; y: 880 } PathLine { x: 800; y: 730 } }
-        MouseArea { x: 740; y: 730; width: 120; height: 150; onClicked: stack.push("View_Store.qml") }
+        ShapePath {
+            strokeColor: "transparent"
+            fillColor: "#B0E0E6"
+            startX: 800
+            startY: 730
+            PathLine {
+                x: 860
+                y: 880
+            }
+            PathLine {
+                x: 740
+                y: 880
+            }
+            PathLine {
+                x: 800
+                y: 730
+            }
+        }
+        MouseArea {
+            x: 740
+            y: 730
+            width: 120
+            height: 150
+            onClicked: stack.push("View_Store.qml")
+        }
     }
-    Text { x: 776; y: 815; text: "商店"; color: "#FFFFD6"; font.pixelSize: 24; font.bold: true }
+
+    Text {
+        x: 776
+        y: 815
+        text: "商店"
+        color: "#34495E"
+        font.pixelSize: 24
+        font.bold: true
+    }
 }
