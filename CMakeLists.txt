@@ -26,6 +26,9 @@ qt_add_qml_module(appVoltFlow
         QML_FILES View_Main.qml
         RESOURCES
         RESOURCES image/logo.ico
+        QML_FILES View_Task.qml
+        QML_FILES View_Set.qml
+        QML_FILES View_Store.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

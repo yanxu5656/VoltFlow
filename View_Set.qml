@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Shapes
 
 Item {
-    id: view_main
+    id: view_set
 
     property int weeklyEnergy: 0
     property int totalEnergy: 0
@@ -34,80 +34,6 @@ Item {
     }
 
     Shape {
-        id: sanjiaoxing_zuo
-        width: 1600
-        height: 900
-        layer.enabled: true
-
-        ShapePath {
-            strokeColor: "#1ABC9C"
-            strokeWidth: 4
-            fillColor: "#8ED9F6"
-            startX: 570
-            startY: 360
-            PathLine { x: 570; y: 60 }
-            PathLine { x: 790; y: 250 }
-            PathLine { x: 570; y: 360 }
-        }
-
-        MouseArea {
-            x: 570
-            y: 60
-            width: 220
-            height: 300
-            onClicked: {
-                stack.push("View_Task.qml")
-            }
-        }
-    }
-
-    Text {
-        x: 590
-        y: 215
-        text: "管理任务"
-        color: "#FFFFD6"
-        font.pixelSize: 24
-        font.bold: true
-    }
-
-    Shape {
-        id: sanjiaoxing_you
-        width: 1600
-        height: 900
-        layer.enabled: true
-
-        ShapePath {
-            strokeColor: "#1ABC9C"
-            strokeWidth: 4
-            fillColor: "#8ED9F6"
-            startX: 1030
-            startY: 360
-            PathLine { x: 1030; y: 60 }
-            PathLine { x: 810; y: 250 }
-            PathLine { x: 1030; y: 360 }
-        }
-
-        MouseArea {
-            x: 810
-            y: 60
-            width: 220
-            height: 300
-            onClicked: {
-                stack.push("View_Set.qml")
-            }
-        }
-    }
-
-    Text {
-        x: 890
-        y: 215
-        text: "时间设置"
-        color: "#FFFFD6"
-        font.pixelSize: 24
-        font.bold: true
-    }
-
-    Shape {
         id: sanjiaoxing_xia
         width: 1600
         height: 900
@@ -130,7 +56,7 @@ Item {
             width: 120
             height: 150
             onClicked: {
-                stack.push("View_Store.qml")
+                stack.pop()
             }
         }
     }
@@ -138,7 +64,7 @@ Item {
     Text {
         x: 776
         y: 815
-        text: "商店"
+        text: "返回"
         color: "#FFFFD6"
         font.pixelSize: 24
         font.bold: true
