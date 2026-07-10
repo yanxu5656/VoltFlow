@@ -33,6 +33,9 @@ qt_add_qml_module(appVoltFlow
         QML_FILES MetricPanel.qml
         QML_FILES MetricItem.qml
         QML_FILES RecommendCard.qml
+        QML_FILES Taskcard.qml
+        QML_FILES TaskDialog.qml
+        QML_FILES TaskData.qml
 
     RESOURCES
         assets/icons/bolt.svg
