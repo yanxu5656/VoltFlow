@@ -8,6 +8,7 @@ if (EXISTS "${CMAKE_CURRENT_LIST_DIR}/importedcontent/CMakeLists.txt")
 endif()
 qt_add_executable(appVoltFlow
     main.cpp
+
 )
 qt_add_qml_module(appVoltFlow
     URI VoltFlow
