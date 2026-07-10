@@ -29,18 +29,19 @@ void TaskManager::init_db() {
         q.exec("CREATE TABLE IF NOT EXISTS sys_data (date_str TEXT PRIMARY KEY, current_energy INTEGER, weekly_energy INTEGER, total_energy INTEGER, tasks_added INTEGER, tasks_completed INTEGER)");
         q.exec("SELECT COUNT(*) FROM sys_recs");
         if (q.next() && q.value(0).toInt() == 0) {
-            q.exec("INSERT INTO sys_recs (name) VALUES ('今日高效番茄钟专注')");
-            q.exec("INSERT INTO sys_recs (name) VALUES ('补充水分与核心拉伸')");
-            q.exec("INSERT INTO sys_recs (name) VALUES ('多维深度睡眠调理')");
-            q.exec("INSERT INTO sys_recs (name) VALUES ('核心极简代码结构重构')");
-            q.exec("INSERT INTO sys_recs (name) VALUES ('系统数据库边界压力测试')");
-            q.exec("INSERT INTO sys_recs (name) VALUES ('每日流转趋势数据复盘')");
+            q.exec("INSERT INTO sys_recs (name) VALUES ('直面恶龙：把今天最不想做的事先做了')");
+            q.exec("INSERT INTO sys_recs (name) VALUES ('桌面清道夫： 把书桌收拾干净')");
+            q.exec("INSERT INTO sys_recs (name) VALUES ('吨吨吨水手： 一天喝够 8 杯水')");
+            q.exec("INSERT INTO sys_recs (name) VALUES ('每日一赞： 真诚地夸奖别人一次')");
+            q.exec("INSERT INTO sys_recs (name) VALUES ('运动 30分钟')");
         }
         q.exec("SELECT COUNT(*) FROM store_items");
         if (q.next() && q.value(0).toInt() == 0) {
-            q.exec("INSERT INTO store_items (name, price) VALUES ('高端护盾结界拓展包', 50)");
-            q.exec("INSERT INTO store_items (name, price) VALUES ('午后深度唤醒咖啡因', 20)");
-            q.exec("INSERT INTO store_items (name, price) VALUES ('周日全量核心注能加速卡', 80)");
+            q.exec("INSERT INTO store_items (name, price) VALUES ('合法赖床券', 30)");
+            q.exec("INSERT INTO store_items (name, price) VALUES ('吃一次疯狂星期四', 50)");
+            q.exec("INSERT INTO store_items (name, price) VALUES ('终末地十连抽', 160)");
+            q.exec("INSERT INTO store_items (name, price) VALUES ('刷奶龙动画片一集', 15)");
+            q.exec("INSERT INTO store_items (name, price) VALUES ('看永雏塔菲直播一小时', 40)");
         }
     }
 }
@@ -133,7 +134,9 @@ void TaskManager::load_store_items() {
 void TaskManager::load_sys_data() {
     QString today = m_current_time.toString("yyyy-MM-dd");
     QSqlQuery q;
-    if (!q.prepare("SELECT current_energy, weekly_energy, total_energy, tasks_added, tasks_completed FROM sys_data WHERE date_str = ?")) return;
+    if (!q.prepare("SELECT current_energy, weekly_energy, total_energy, tasks_added, tasks_completed FROM sys_data WHERE date_str = ?")) {
+        return;
+    }
     q.addBindValue(today);
     if (q.exec() && q.next()) {
         m_current_energy = q.value(0).toInt();
@@ -155,7 +158,9 @@ void TaskManager::load_sys_data() {
 void TaskManager::save_sys_data() {
     QString today = m_current_time.toString("yyyy-MM-dd");
     QSqlQuery q;
-    if (!q.prepare("REPLACE INTO sys_data (date_str, current_energy, weekly_energy, total_energy, tasks_added, tasks_completed) VALUES (?, ?, ?, ?, ?, ?)")) return;
+    if (!q.prepare("REPLACE INTO sys_data (date_str, current_energy, weekly_energy, total_energy, tasks_added, tasks_completed) VALUES (?, ?, ?, ?, ?, ?)")) {
+        return;
+    }
     q.addBindValue(today);
     q.addBindValue(m_current_energy);
     q.addBindValue(m_weekly_energy);
@@ -168,10 +173,14 @@ void TaskManager::save_sys_data() {
 }
 
 void TaskManager::addTask(const QString &name, int priority, int durationHours, int reviewType, int reviewInt, int reward, int isRec) {
-    if (name.isEmpty()) return;
+    if (name.isEmpty()) {
+        return;
+    }
     QDateTime deadline = m_current_time.addSecs(durationHours * 3600);
     QSqlQuery q;
-    if (!q.prepare("INSERT INTO user_tasks (name, priority, deadline, review_type, review_interval, energy_reward, is_rec, status) VALUES (?, ?, ?, ?, ?, ?, ?, 0)")) return;
+    if (!q.prepare("INSERT INTO user_tasks (name, priority, deadline, review_type, review_interval, energy_reward, is_rec, status) VALUES (?, ?, ?, ?, ?, ?, ?, 0)")) {
+        return;
+    }
     q.addBindValue(name);
     q.addBindValue(priority);
     q.addBindValue(deadline);
@@ -188,17 +197,27 @@ void TaskManager::addTask(const QString &name, int priority, int durationHours, 
 }
 
 void TaskManager::addRecPool(const QString &name) {
-    if (name.isEmpty()) return;
+    if (name.isEmpty()) {
+        return;
+    }
     QSqlQuery q;
-    if (!q.prepare("INSERT INTO sys_recs (name) VALUES (?)")) return;
+    if (!q.prepare("INSERT INTO sys_recs (name) VALUES (?)")) {
+        return;
+    }
     q.addBindValue(name);
-    if (q.exec()) load_sys_recs();
+    if (q.exec()) {
+        load_sys_recs();
+    }
 }
 
 void TaskManager::addStoreItem(const QString &name, int price) {
-    if (name.isEmpty()) return;
+    if (name.isEmpty()) {
+        return;
+    }
     QSqlQuery q;
-    if (!q.prepare("INSERT INTO store_items (name, price) VALUES (?, ?)")) return;
+    if (!q.prepare("INSERT INTO store_items (name, price) VALUES (?, ?)")) {
+        return;
+    }
     q.addBindValue(name);
     q.addBindValue(price);
     if (q.exec()) {
@@ -208,7 +227,9 @@ void TaskManager::addStoreItem(const QString &name, int price) {
 
 void TaskManager::removeStoreItem(int id) {
     QSqlQuery q;
-    if (!q.prepare("DELETE FROM store_items WHERE id = ?")) return;
+    if (!q.prepare("DELETE FROM store_items WHERE id = ?")) {
+        return;
+    }
     q.addBindValue(id);
     if (q.exec()) {
         load_store_items();
@@ -217,14 +238,15 @@ void TaskManager::removeStoreItem(int id) {
 
 void TaskManager::buyItem(int id) {
     QSqlQuery q;
-    if (!q.prepare("SELECT price FROM store_items WHERE id = ?")) return;
+    if (!q.prepare("SELECT price FROM store_items WHERE id = ?")) {
+        return;
+    }
     q.addBindValue(id);
     if (q.exec() && q.next()) {
         int price = q.value(0).toInt();
-        if (m_current_energy >= price) {
-            m_current_energy -= price;
+        if (m_total_energy >= price) {
+            m_total_energy -= price;
             m_weekly_energy = qMax(0, m_weekly_energy - price);
-            m_total_energy = qMax(0, m_total_energy - price);
             save_sys_data();
             emit energyChanged();
         }
@@ -233,13 +255,17 @@ void TaskManager::buyItem(int id) {
 
 void TaskManager::completeTask(int id) {
     QSqlQuery q;
-    if (!q.prepare("SELECT energy_reward FROM user_tasks WHERE id = ? AND status = 0")) return;
+    if (!q.prepare("SELECT energy_reward FROM user_tasks WHERE id = ? AND status = 0")) {
+        return;
+    }
     q.addBindValue(id);
     if (q.exec() && q.next()) {
         m_current_energy += q.value(0).toInt();
         m_tasks_completed++;
         QSqlQuery u;
-        if (!u.prepare("UPDATE user_tasks SET status = 1 WHERE id = ?")) return;
+        if (!u.prepare("UPDATE user_tasks SET status = 1 WHERE id = ?")) {
+            return;
+        }
         u.addBindValue(id);
         u.exec();
         save_sys_data();
@@ -252,13 +278,21 @@ void TaskManager::completeTask(int id) {
 void TaskManager::removeTask(int id, bool isPool) {
     QSqlQuery q;
     if (isPool) {
-        if (!q.prepare("DELETE FROM sys_recs WHERE id = ?")) return;
+        if (!q.prepare("DELETE FROM sys_recs WHERE id = ?")) {
+            return;
+        }
         q.addBindValue(id);
-        if (q.exec()) load_sys_recs();
+        if (q.exec()) {
+            load_sys_recs();
+        }
     } else {
-        if (!q.prepare("DELETE FROM user_tasks WHERE id = ?")) return;
+        if (!q.prepare("DELETE FROM user_tasks WHERE id = ?")) {
+            return;
+        }
         q.addBindValue(id);
-        if (q.exec()) load_tasks();
+        if (q.exec()) {
+            load_tasks();
+        }
     }
 }
 
@@ -303,7 +337,9 @@ void TaskManager::onTick() {
 void TaskManager::check_reminders() {
     for (int i = 0; i < m_user_tasks.size(); ++i) {
         QVariantMap t = m_user_tasks[i].toMap();
-        if (t["is_rec"].toInt() == 1) continue;
+        if (t["is_rec"].toInt() == 1) {
+            continue;
+        }
         int id = t["id"].toInt();
         QString name = t["name"].toString();
         int priority = t["priority"].toInt();

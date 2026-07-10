@@ -141,10 +141,10 @@ Item {
                                 verticalAlignment: Text.AlignVCenter
                             }
                             background: Rectangle {
-                                color: taskManager.currentEnergy >= modelData.price ? (parent.pressed ? "#D35400" : "#E67E22") : "#BDC3C7"
+                                color: taskManager.totalEnergy >= modelData.price ? (parent.pressed ? "#D35400" : "#E67E22") : "#BDC3C7"
                                 radius: 8
                             }
-                            enabled: taskManager.currentEnergy >= modelData.price
+                            enabled: taskManager.totalEnergy >= modelData.price
                             onClicked: taskManager.buyItem(modelData.id)
                         }
                     }
